@@ -3,16 +3,23 @@ version: '3.8'
 services:
   api:
     build:
-      context: ./api
-      dockerfile: docker/Dockerfile  # Updated path to Dockerfile
+      context: ./api  # Make sure this path points to where your Dockerfile is for the Flask API
+      dockerfile: docker/Dockerfile
     ports:
       - "5000:5000"
     environment:
-      - GOOGLE_API_KEY=AIZaSyB-q2NAqq5r2INU0yXat9VV1gEqtVRpidw
+      - GOOGLE_API_KEY=AIzaSyB-q2NAqq5r2INU0yXat9VV1gEqtVRpidw
+    networks:
+      - mynetwork
 
   streamlit:
     build:
-      context: ./streamlit
-      dockerfile: docker/Dockerfile  # Updated path to Dockerfile
+      context: ./streamlit  # Make sure this path points to where your Dockerfile is for Streamlit
+      dockerfile: docker/Dockerfile
     ports:
       - "8501:8501"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:

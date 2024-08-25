@@ -14,7 +14,17 @@ def process_data(file):
         st.error("Unsupported file format")
         return None
 
-# Streamlit layout
+# Function to extract Python code from the model response
+def extract_code(response):
+    try:
+        start = response.find("```python") + len("```python")
+        end = response.find("```", start)
+        python_code = response[start:end].strip()
+        return python_code
+    except Exception as e:
+        return f"Error extracting code: {str(e)}"
+
+# Streamlit layout configuration
 st.set_page_config(layout="wide")
 
 # Sidebar for inputs
@@ -43,15 +53,19 @@ with col1:
         if query:
             if 'data' in st.session_state:
                 data = st.session_state['data']
-                response = requests.post("http://localhost:5000/predict", json={"data": data, "query": query})
-                
-                if response.ok:
-                    prediction = response.json().get("prediction")
-                    python_code = extract_code(prediction)
-                    st.session_state['python_code'] = python_code
-                    st.code(python_code, language='python')
-                else:
-                    st.error("Error: Unable to get prediction from server.")
+                try:
+                    # Use 'api' instead of 'localhost' for Docker networking
+                    response = requests.post("http://api:5000/predict", json={"data": data, "query": query})
+                    
+                    if response.ok:
+                        prediction = response.json().get("prediction")
+                        python_code = extract_code(prediction)
+                        st.session_state['python_code'] = python_code
+                        st.code(python_code, language='python')
+                    else:
+                        st.error(f"Error: Unable to get prediction from server. Status code: {response.status_code}")
+                except requests.exceptions.RequestException as e:
+                    st.error(f"Request failed: {e}")
             else:
                 st.error("Please describe the data first.")
         else:
@@ -62,7 +76,7 @@ with col2:
     if 'python_code' in st.session_state:
         python_code = st.session_state['python_code']
         try:
-            # Create a local variable dictionary to capture variables
+            # Execute the generated Python code within a safe local environment
             local_vars = {}
             exec(python_code, {'plt': plt, 'px': px, 'pd': pd, 'st': st}, local_vars)
         except Exception as e:
