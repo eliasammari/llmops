@@ -1,5 +1,4 @@
 Flask
 langchain
 langchain_google_genai
-transformers
 
