@@ -2,13 +2,21 @@ version: '3.8'
 
 services:
   api:
-    build: ./api
+    build:
+      context: ./api
+      dockerfile: dockerfile/Dockerfile
     ports:
       - "5000:5000"
-  
+    volumes:
+      - ./api/src:/app
+    environment:
+      - GOOGLE_API_KEY=AIZaSyB-q2NAqq5r2INU0yXat9VV1gEqtVRpidw
+
   streamlit:
-    build: ./streamlit
+    build:
+      context: ./streamlit
+      dockerfile: dockerfile/Dockerfile
     ports:
       - "8501:8501"
-    depends_on:
-      - api
+    volumes:
+      - ./streamlit/src:/app
