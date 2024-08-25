@@ -5,7 +5,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy only the requirements file to the working directory
-COPY dockerfile/requirements.txt /app/requirements.txt
+COPY docker/requirements.txt /app/requirements.txt
 
 # Install only the required dependencies from requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
@@ -18,3 +18,4 @@ EXPOSE 8501
 
 # Run Streamlit app when the container launches
 CMD ["streamlit", "run", "src/app_front.py", "--server.port=8501", "--server.address=0.0.0.0"]
+

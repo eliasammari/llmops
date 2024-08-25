@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: ./api
-      dockerfile: dockerfile/Dockerfile
+      dockerfile: docker/Dockerfile  # Updated path to Dockerfile
     ports:
       - "5000:5000"
     environment:
@@ -13,6 +13,6 @@ services:
   streamlit:
     build:
       context: ./streamlit
-      dockerfile: dockerfile/Dockerfile
+      dockerfile: docker/Dockerfile  # Updated path to Dockerfile
     ports:
       - "8501:8501"
