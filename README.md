@@ -2,7 +2,7 @@
 
 Bienvenue dans le projet Text-to-Code, une initiative axée sur le développement d'un workflow robuste de LLMOps (Large Language Model Operations). Ce projet vise à exploiter les grands modèles de langage pour générer automatiquement du code Python pour l'analyse graphique à partir de saisies en langage naturel.
 
-![Logo](images/mismis.png) <!-- Ajoutez le logo de votre projet ici -->
+![Logo](images/mistral.png) <!-- Ajoutez le logo de votre projet ici -->
 
 ## Aperçu du Projet
 
