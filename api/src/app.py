@@ -40,12 +40,13 @@ def generate_prompt_template(data, query):
     must start with ```python
     must end with ```
     must not contain any def function
-    must contain only the final answer without all the previous text:
+    must contain only the final answer without all the previous text.
     Always use plotly if necessary or asked for a graph, else print only the value.
+    Always use fig.
     Always start counting from the last record inside the dataset and not from the actual day.
     Always put the answer in a sentence.
       
-    give me the python code to {query}
+    give me the python code to {query}  based on the provided data in the prompt.
     Answer"""
     
     return template.format(data=data, query=query)
@@ -63,6 +64,7 @@ def def_rag_prompt_template(data):
     - must end with ```
     - must not contain any def function
     - must contain only the final answer without all the previous text.
+    - Always use fig.
     - Always use plotly if necessary or asked for a graph, else print only the value.
     - Always start counting from the last record inside the dataset and not from the actual day.
     - Always put the answer in a sentence.
@@ -70,7 +72,7 @@ def def_rag_prompt_template(data):
     Context retrieved:
     {context}
         
-    Question: {question}
+    Question: {question}  based on the provided data in the prompt.
     Answer:
     """
     formatted_prompt = prompte_template.format(
@@ -78,15 +80,33 @@ def def_rag_prompt_template(data):
         context="{context}",  # Leave as placeholder for later use
         question="{question}"  # Leave as placeholder for later use
     )
-    return formatted_prompt.format(data=data)
+    return formatted_prompt.format(data=data, context="{context}", question="{question}")
 
 # Function to extract python code from response
 def extract_code(response):
     try:
-        start = response.find("```python") + len("```python")
-        end = response.find("```", start)
-        python_code = response[start:end].strip()
-        return python_code
+        # Check if the response is a dictionary
+        if isinstance(response, dict):
+            # Ensure the dictionary has an 'answer' key
+            if 'answer' in response:
+                answer_text = response['answer']
+            else:
+                return "Error: Response dictionary does not contain 'answer' key."
+        else:
+            # Assume response is a string
+            answer_text = response
+        
+        # Extract Python code using the appropriate delimiters
+        start = answer_text.find("```python") + len("```python")
+        end = answer_text.find("```", start)
+        python_code = answer_text[start:end].strip()
+
+        # Check if any code was extracted
+        if python_code:
+            return python_code
+        else:
+            return "Error: No Python code found in the response."
+            
     except Exception as e:
         return f"Error extracting code: {str(e)}"
 
@@ -116,6 +136,7 @@ def handle_agent_query_rag(data, query):
 
         # Create Prompt Template Object
         prompt_template = def_rag_prompt_template(data)
+        print(prompt_template)
         qa_prompt = PromptTemplate(input_variables=["context", "question"], template=prompt_template)
 
         # Initialize Memory
@@ -138,11 +159,24 @@ def handle_agent_query_rag(data, query):
     except Exception as e:
         return f"Error: {str(e)}"
     
-@app.route('/predict', methods=['POST'])
-def predict():
+
+@app.route('/send_predict', methods=['POST'])
+def send_predict():
     data = request.json.get('data')
     query = request.json.get('query')
+    response = handle_agent_query(data, query)
+    return jsonify({'prediction': response})
+
+@app.route('/rag_predict', methods=['POST'])
+def rag_predict():
+    data = request.json.get('data')
+    query = request.json.get('query')
+
+    if data is None or query is None:
+        return jsonify({'error': 'Missing data or query'}), 400
+    
     response = handle_agent_query_rag(data, query)
+    response = extract_code(response)
     return jsonify({'prediction': response})
 
 if __name__ == '__main__':

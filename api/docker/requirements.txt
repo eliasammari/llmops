@@ -5,18 +5,7 @@ langchain-community
 langchain-google-genai
 langchain-huggingface
 langchain-pinecone
-langchain_experimental
-langchain_core
-llama-index-vector-stores-pinecone
-llama-index-embeddings-huggingface
 requests
-beautifulsoup4
 pinecone-client
-llama-index
-llama-index-core
-comet-ml
-bitsandbytes
-datasets
 sentence-transformers
-pinecone_datasets
 
