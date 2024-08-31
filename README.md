@@ -46,12 +46,12 @@ Exécutez la commande suivante pour construire les images Docker et démarrer le
 docker-compose up --build
 ```
   Cette commande démarrera deux conteneurs :
-        * Conteneur Backend : Exécute le serveur backend qui gère l'inférence du modèle et les requêtes API.
-        * Conteneur Streamlit : Exécute l'application Streamlit pour l'interface utilisateur.
+       - Conteneur Backend : Exécute le serveur backend qui gère l'inférence du modèle et les requêtes API.
+       - Conteneur Streamlit : Exécute l'application Streamlit pour l'interface utilisateur.
 
   Accéder à l'Application Streamlit :
 
-  * Ouvrez votre navigateur web et allez sur http://localhost:8501 pour accéder à l'application Streamlit.
+   - Ouvrez votre navigateur web et allez sur http://localhost:8501 pour accéder à l'application Streamlit.
 
 3. Workflow de Développement
 
