@@ -9,10 +9,19 @@ import pinecone as pc
 
 from pinecone import Pinecone
 from langchain.prompts import PromptTemplate
+from langsmith import Client
 
-os.environ["GOOGLE_API_KEY"] = "AIzaSyB-q2NAqq5r2INU0yXat9VV1gEqtVRpidw"
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
+os.environ["LANGCHAIN_API_KEY"] = "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"
+os.environ["LANGCHAIN_PROJECT"] = "Live-evaluation"
 os.environ["PINECONE_API_KEY"] = "396738cd-4531-45b0-b166-39ec4b61735d"
 
+client=Client()
+
+#   AIzaSyAauQdTvqz0ynb15ZBL6lrhwzmpz5kkEh8
+#   AIzaSyDpN7nVRpfQ16DgIHMhA0py2d7hFcLq8WM
+#   AIzaSyB-q2NAqq5r2INU0yXat9VV1gEqtVRpidw
 # Set up API key and model
 os.environ["GOOGLE_API_KEY"] = "AIzaSyB-q2NAqq5r2INU0yXat9VV1gEqtVRpidw"
 gllm = GoogleGenerativeAI(model="gemini-pro", api_key=os.getenv("GOOGLE_API_KEY"))
